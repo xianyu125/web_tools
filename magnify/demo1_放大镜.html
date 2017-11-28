@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style type="text/css">
+		#middle {
+			width: 400px;
+			height: 400px;
+			position: absolute;
+			top:50px;
+			left:50px;
+			border:1px solid;
+			overflow: hidden;
+		}
+		#middle img {
+			width: 400px;
+			height: 400px;
+		}
+
+		#len {
+			width: 200px;
+			height: 200px;
+			position: absolute;
+			top: 0;
+			left: 0;
+			background: #000;
+			opacity: 0.3;
+			display: none;
+		}
+
+		#big {
+			width: 400px;
+			height: 400px;
+			position: absolute;
+			top : 50px;
+			left : 460px;
+			border:1px solid;
+			overflow: hidden;
+			display: none;
+		}
+
+		#big_img {
+			width: 800px;
+			height: 800px;
+			position: absolute;
+			top: 0;
+			left: 0;
+		}
+	</style>
+</head>
+<body>
+	<div id="middle">
+		<img src="images/middle.jpg">
+		<div id="len"></div>
+	</div>
+
+	<div id="big">
+		<img src="images/big.jpg" id="big_img">
+	</div>
+
+	<script src="js/tools.js"></script>
+	<script>
+		var lenWidth = outerWidth($("#len")),
+			lenHeight = outerHeight($("#len")),
+			middleWidth = innerWidth($("#middle")),
+			middleHeight = innerHeight($("#middle"));
+
+		// 鼠标移入/移出中图盒子事件
+		$("#middle").onmouseenter = function(){
+			show($("#len"));
+			show($("#big"));
+		}
+		$("#middle").onmouseleave = function(){
+			hide($("#len"));
+			hide($("#big"));
+		}
+
+		// 鼠标在中图盒子中的移动事件
+		$("#middle").onmousemove = function(e){
+			e = e || event;
+			// 将镜头坐标设置到光标所在处(文档中定位)
+			offset($("#len"), {
+				top : page(e).y - lenHeight / 2,
+				left : page(e).x - lenWidth / 2
+			});
+			// 获取镜头在其父容器中的坐标
+			var _top = $("#len").offsetTop,
+				_left = $("#len").offsetLeft;
+			if (_top <= 0) // 上
+				_top = 0;
+			else if (_top >= middleHeight - lenHeight) // 下
+				_top = middleHeight - lenHeight;
+			if (_left <= 0) // 左
+				_left = 0;
+			else if (_left >= middleWidth - lenWidth) // 右
+				_left = middleWidth - lenWidth;
+
+			// 重新设置修改镜头的CSS定位
+			$("#len").style.left = _left + "px";
+			$("#len").style.top = _top + "px";
+
+			// 放大图片定位
+			$("#big_img").style.left = -2 * _left + "px";
+			$("#big_img").style.top = -2 * _top + "px";
+		}
+	</script>
+</body>
+</html>

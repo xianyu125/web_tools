@@ -1,0 +1,29 @@
+#container {
+	width:320px;
+	height: 568px;
+	position: relative;
+	margin:20px auto;
+	overflow: hidden;
+}
+
+#start {	
+	width:320px;
+	height: 568px;
+	background: url(../images/start_bg.png);
+}
+
+#game {
+	width:320px;
+	height: 568px;
+	background: url(../images/bg.png);
+	position: relative;
+}
+
+#score {
+	width:320px;
+	height:30px;
+	line-height: 30px;
+	position: absolute;
+	top:0;
+	left:0;
+}

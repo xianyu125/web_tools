@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style type="text/css">
+		*{margin: 0;padding: 0;}
+		#container {
+			width:1000px;
+			position: relative;
+			margin:0 auto;
+			border:1px solid;
+		}
+		.img {
+			width: 200px;
+			padding: 10px;
+			border: 1px solid #ccc;
+			border-radius: 5px;
+			position: absolute;
+			top: 0;
+			left: 0;
+		}
+		.img img {
+			width: 200px;
+		}
+
+		#more {
+			width: 200px;
+			height:50px;
+			line-height: 50px;
+			text-align: center;
+			border:1px solid;
+		}
+	</style>
+</head>
+<body>
+	<div id="container">
+		<div class="img"><img src="images/imgs (1).jpg"></div>
+		<div class="img"><img src="images/imgs (2).jpg"></div>
+		<div class="img"><img src="images/imgs (3).jpg"></div>
+		<div class="img"><img src="images/imgs (4).jpg"></div>
+		<div class="img"><img src="images/imgs (5).jpg"></div>
+		<div class="img"><img src="images/imgs (6).jpg"></div>
+		<div class="img"><img src="images/imgs (7).jpg"></div>
+		<div class="img"><img src="images/imgs (8).jpg"></div>
+		<div class="img"><img src="images/imgs (9).jpg"></div>
+		<div class="img"><img src="images/imgs (10).jpg"></div>		
+		<div class="img"><img src="images/imgs (11).jpg"></div>
+		<div class="img"><img src="images/imgs (12).jpg"></div> 
+		<div class="img"><img src="images/imgs (13).jpg"></div>
+		<div class="img"><img src="images/imgs (14).jpg"></div>
+		<div class="img"><img src="images/imgs (15).jpg"></div>
+		<div class="img"><img src="images/imgs (16).jpg"></div>
+		<div class="img"><img src="images/imgs (17).jpg"></div>
+		<div class="img"><img src="images/imgs (18).jpg"></div>
+	</div>
+
+	<div id="more">加载更多图片......</div>
+
+	<script src="js/tools.js"></script>
+	<script>
+		// 页面内容加载完毕后执行的事件
+		window.onload = function(){
+			var imgs = $(".img"), //  待定位的所有图片盒子
+				len = imgs.length; // 图片张数
+				hspace = 20, // 水平间距
+				vspace = 10, // 垂直间距
+				colWidth = imgs[0].offsetWidth, // 列宽
+				height = [0, 0, 0, 0], // 保存各列的高度
+				cols = 4, // 每行列数
+				currentPage = 1,
+				pageIndex = 18,
+				imgsPerPage = 18;
+
+			// 定位
+			for (var i = 0; i < len; i++) {
+				// 求最短列索引
+				var currCol = findShortestIndex(height);
+				// 计算距左侧的间距
+				var _left = currCol * colWidth + (currCol + 1) * hspace;
+				// 顶部
+				var _top = height[currCol] + vspace;
+				// 设置CSS样式
+				imgs[i].style.left = _left + "px";
+				imgs[i].style.top = _top + "px";
+				// 将当前定位元素的高度累加到高度数组对应元素中
+				height[currCol] += imgs[i].offsetHeight + vspace;
+			}
+
+			// 设置容器高度
+			$("#container").style.height = findMax(height) + vspace + "px";
+
+			// 绑定“加载更多图片”点击事件
+			$("#more").onclick = function(){
+				currentPage++;
+				this.innerHTML = "加载第"+ (currentPage + 1) +"页";
+				var maxNum = currentPage * imgsPerPage;
+				// 保存动态添加元素的数组
+				var imgs = [];
+				// 将动态添加的元素加入容器中
+				for (; pageIndex < maxNum; pageIndex++) {
+					// 创建 div 容器
+					var _div = document.createElement("div");
+					_div.className = "img";
+					// 创建 img 元素
+					var _img = document.createElement("img");
+					_img.src = "images/imgs ("+ (pageIndex + 1) +").jpg";
+					// 将创建的 img 元素添加到 div 容器中
+					_div.appendChild(_img);
+					// 将创建好的 div 添加到 div#container 中
+					$("#container").appendChild(_div);
+					// 将当前创建 div 保存到数组中
+					imgs.push(_div);
+				}
+				// 定位
+				for (let i = 0, len = imgs.length; i < len; i++) {
+					// 当图片内容加载完毕，再实现定位
+					$("img", imgs[i])[0].onload = function(){
+						console.log("in onload")
+						// 最短列索引
+						var currCol = findShortestIndex(height);
+						// 左侧
+						var _left = currCol * colWidth + (currCol + 1) * hspace;
+						// 顶部
+						var _top = height[currCol] + vspace;
+						// CSS定位
+						imgs[i].style.left = _left + "px";
+						imgs[i].style.top = _top + "px";
+						// 修改列高
+						height[currCol] += imgs[i].offsetHeight + vspace;
+
+						// 设置容器高度
+						$("#container").style.height = findMax(height) + vspace + "px";
+					}
+				}
+			}
+		}
+
+		// 查找最短列的索引
+		function findShortestIndex(height) {
+			// 默认数组第一个元素最小，索引为0
+			var min = height[0], index = 0;
+			// 循环遍历
+			for (var i = 1, len = height.length; i < len; i++) {
+				if(height[i] < min) {
+					min = height[i];
+					index = i;
+				}
+			}
+			// 返回最小值索引
+			return index;
+		}
+
+		// 查找最高的列值
+		function findMax(height) {
+			var max = height[0];
+			for (var i = 0, len = height.length; i < len; i++) {
+				if (max < height[i])
+					max = height[i];
+			}
+			return max;
+		}
+	</script>
+</body>
+</html>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style type="text/css">
+		*{margin: 0;padding: 0;}
+		#container {
+			width:1000px;
+			position: relative;
+			margin:0 auto;
+		}
+		.img {
+			width: 200px;
+			padding: 10px;
+			border: 1px solid #ccc;
+			border-radius: 5px;
+			position: absolute;
+			top: 0;
+			left: 0;
+		}
+		.img img {
+			width: 200px;
+		}
+	</style>
+</head>
+<body>
+	<div id="container">
+		<div class="img"><img src="images/imgs (1).jpg"></div>
+		<div class="img"><img src="images/imgs (2).jpg"></div>
+		<div class="img"><img src="images/imgs (3).jpg"></div>
+		<div class="img"><img src="images/imgs (4).jpg"></div>
+		<div class="img"><img src="images/imgs (5).jpg"></div>
+		<div class="img"><img src="images/imgs (6).jpg"></div>
+		<div class="img"><img src="images/imgs (7).jpg"></div>
+		<div class="img"><img src="images/imgs (8).jpg"></div>
+		<div class="img"><img src="images/imgs (9).jpg"></div>
+		<div class="img"><img src="images/imgs (10).jpg"></div>		
+		<div class="img"><img src="images/imgs (11).jpg"></div>
+		<div class="img"><img src="images/imgs (12).jpg"></div> 
+		<div class="img"><img src="images/imgs (13).jpg"></div>
+		<div class="img"><img src="images/imgs (14).jpg"></div>
+		<div class="img"><img src="images/imgs (15).jpg"></div>
+		<div class="img"><img src="images/imgs (16).jpg"></div>
+		<div class="img"><img src="images/imgs (17).jpg"></div>
+		<div class="img"><img src="images/imgs (18).jpg"></div>
+		<div class="img"><img src="images/imgs (19).jpg"></div>
+		<div class="img"><img src="images/imgs (20).jpg"></div>		
+		<div class="img"><img src="images/imgs (21).jpg"></div>
+		<div class="img"><img src="images/imgs (22).jpg"></div> 
+		<div class="img"><img src="images/imgs (23).jpg"></div>
+		<div class="img"><img src="images/imgs (24).jpg"></div>
+		<div class="img"><img src="images/imgs (25).jpg"></div>
+		<div class="img"><img src="images/imgs (26).jpg"></div>
+		<div class="img"><img src="images/imgs (27).jpg"></div>
+		<div class="img"><img src="images/imgs (28).jpg"></div>
+		<div class="img"><img src="images/imgs (29).jpg"></div>
+		<div class="img"><img src="images/imgs (30).jpg"></div>		
+		<div class="img"><img src="images/imgs (31).jpg"></div>
+		<div class="img"><img src="images/imgs (32).jpg"></div> 
+		<div class="img"><img src="images/imgs (33).jpg"></div>
+		<div class="img"><img src="images/imgs (34).jpg"></div>
+		<div class="img"><img src="images/imgs (35).jpg"></div>
+		<div class="img"><img src="images/imgs (36).jpg"></div>
+		<div class="img"><img src="images/imgs (37).jpg"></div>
+		<div class="img"><img src="images/imgs (38).jpg"></div>
+		<div class="img"><img src="images/imgs (39).jpg"></div>
+	</div>
+
+	<script src="js/tools.js"></script>
+	<script>
+		// 页面内容加载完毕后执行的事件
+		window.onload = function(){
+			var imgs = $(".img"), //  待定位的所有图片盒子
+				len = imgs.length; // 图片张数
+				hspace = 20, // 水平间距
+				vspace = 10, // 垂直间距
+				colWidth = imgs[0].offsetWidth, // 列宽
+				height = [0, 0, 0, 0], // 保存各列的高度
+				cols = 4; // 每行列数
+
+			// 定位
+			for (var i = 0; i < len; i++) {
+				var currCol = i % cols;
+				// 计算距左侧的间距
+				var _left = currCol * colWidth + (currCol + 1) * hspace;
+				// 顶部
+				var _top = height[currCol] + vspace;
+				// 设置CSS样式
+				imgs[i].style.left = _left + "px";
+				imgs[i].style.top = _top + "px";
+				// 将当前定位元素的高度累加到高度数组对应元素中
+				height[currCol] += imgs[i].offsetHeight + vspace;
+			}
+
+			/*// 第一行定位
+			for (var i = 0; i < 4; i++) {
+				var currCol = i % 4;
+				// 计算距左侧的间距
+				var _left = currCol * colWidth + (currCol + 1) * hspace;
+				// 顶部
+				var _top = height[currCol] + vspace;
+				// 设置CSS样式
+				imgs[i].style.left = _left + "px";
+				imgs[i].style.top = _top + "px";
+				// 将当前定位元素的高度累加到高度数组对应元素中
+				height[currCol] += imgs[i].offsetHeight + vspace;
+			}
+			console.log(height, i);
+
+			// 第二及之后行定位
+			for ( ; i < len; i++) {
+				// 计算当前元素的列索引
+				var currCol = i % 4;
+				// 计算当前定位元素距离容器左侧的间距
+				var _left = currCol * colWidth + (currCol + 1) * hspace;
+				// 顶部
+				var _top = height[currCol] + vspace;
+				// 设置 css 样式
+				imgs[i].style.left = _left + "px";
+				imgs[i].style.top = _top + "px";
+				// 将当前定位的元素高度及垂直间距累加到高度数组元素中
+				height[currCol] += imgs[i].offsetHeight + vspace;
+			}*/
+
+			/*// 第二行定位
+			for ( ; i < 8; i++) {
+				// 计算当前元素的列索引
+				var currCol = i % 4;
+				// 计算当前定位元素距离容器左侧的间距
+				var _left = currCol * colWidth + (currCol + 1) * hspace;
+				// 顶部
+				var _top = height[currCol] + vspace;
+				// 设置 css 样式
+				imgs[i].style.left = _left + "px";
+				imgs[i].style.top = _top + "px";
+				// 将当前定位的元素高度及垂直间距累加到高度数组元素中
+				height[currCol] += imgs[i].offsetHeight + vspace;
+			}
+
+			// 第三行定位
+			for ( ; i < 12; i++) {
+				// 计算当前元素的列索引
+				var currCol = i % 4;
+				// 计算当前定位元素距离容器左侧的间距
+				var _left = currCol * colWidth + (currCol + 1) * hspace;
+				// 顶部
+				var _top = height[currCol] + vspace;
+				// 设置 css 样式
+				imgs[i].style.left = _left + "px";
+				imgs[i].style.top = _top + "px";
+				// 将当前定位的元素高度及垂直间距累加到高度数组元素中
+				height[currCol] += imgs[i].offsetHeight + vspace;
+			}*/
+
+		}
+	</script>
+</body>
+</html>

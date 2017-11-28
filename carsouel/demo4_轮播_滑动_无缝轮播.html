@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style type="text/css">
+		* {margin: 0;padding: 0;}
+		#container {
+			width: 790px;
+			height: 340px;
+			position: relative;
+			margin:50px auto;
+			overflow: hidden;
+		}
+		#imgs {
+			height: 340px;
+			position: absolute;
+			list-style: none;
+			top: 0;
+			left: 0;
+		}
+
+		#imgs li {
+			width: 790px;
+			height: 340px;
+			float:left;
+		}
+
+		#pages {
+			width: 790px;
+			height: 30px;
+			position: absolute;
+			bottom: 0;
+			background: #000;
+		}
+
+		#pages i {
+			display: inline-block;
+			width:20px;
+			height: 20px;
+			margin:5px;
+			border-radius: 10px;
+			background: #fff;
+		}
+		#pages i.current {
+			background: #f00;
+		}
+
+		#prev, #next {
+			width: 45px;
+			height: 100px;
+			background: #000;
+			line-height: 100px;
+			text-align: center;
+			color:#fff;
+			position: absolute;
+			top:0;
+			bottom: 0;
+			margin: auto;
+		}
+		#next {
+			right:0;
+		}
+	</style>
+</head>
+<body>
+	<div id="container">
+		<ul id="imgs">
+			<li><img src="images/1.jpg"></li>
+			<li><img src="images/2.jpg"></li>
+			<li><img src="images/3.jpg"></li>
+			<li><img src="images/4.jpg"></li>
+		</ul>
+		<div id="pages"></div>
+		<div id="prev"><</div>
+		<div id="next">></div>
+	</div>
+
+	<script src="js/tools.js"></script>
+	<script>
+		var imgs = $("li", $("#imgs")),
+			len = imgs.length,
+			imgWidth = imgs[0].offsetWidth,
+			currentIndex = 1,
+			nextIndex = 2,
+			circles = null, // 所有小圆点
+			timer = null,
+			isRunning = false; // 是否正在执行运动动画效果
+
+		// 动态复制第一张图片与最后一张图片的盒子
+		var first = imgs[0].cloneNode(true),
+			last = imgs[len - 1].cloneNode(true);
+		// 添加到 ul#imgs 中
+		$("#imgs").appendChild(first);
+		$("#imgs").insertBefore(last, imgs[0]);
+		// 图片总张数增加2
+		len += 2;
+		// 动态设置 ul#imgs 宽度
+		$("#imgs").style.width = len * imgWidth + "px";
+		// 设置初始显示第一张图片内容
+		$("#imgs").style.left = -imgWidth + "px";
+
+		// 动态创建小圆点
+		var html = "";
+		for (var i = 0; i < len - 2; i++) {
+			html += "<i></i>";
+		}
+		$("#pages").innerHTML = html;
+		circles = $("i", $("#pages"));
+		circles[0].className = "current";
+
+		// 轮播函数
+		function move() {
+			// 标记运动执行运动动画
+			isRunning = true;
+
+			// 计算定位位置
+			var _left = -nextIndex * imgWidth;
+			// 运动动画效果
+			animate($("#imgs"), {left:_left}, 400, function(){
+				if (currentIndex >= len - 1) {
+					currentIndex = 1;
+					nextIndex = 2;
+					$("#imgs").style.left = -imgWidth + "px";
+				} else if (currentIndex <= 0) {
+					currentIndex = len - 2;
+					nextIndex = len - 1;
+					$("#imgs").style.left = -(len - 2) * imgWidth + "px";
+				}
+
+				// 修改标记
+				isRunning = false;
+			});
+			/* 修改小圆点样式 */
+			// 求即将变为红色的小圆点索引
+			var circleIndex = nextIndex - 1;
+			if (nextIndex >= len - 1)
+				circleIndex = 0;
+			else if (nextIndex <= 0)
+				circleIndex = len - 3;
+			// 将所有小圆点先清除类样式
+			for (var i = 0; i < len - 2; i++) {
+				circles[i].className = "";
+			}
+			// 将 circleIndex 索引处小圆点背景添加为红色
+			circles[circleIndex].className = "current";
+
+			currentIndex = nextIndex;
+			nextIndex++;
+		}
+
+		// 启动自动轮播
+		timer = setInterval(move, 3000);
+
+		// 鼠标移入/移出容器，停止/启动自动轮播
+		$("#container").onmouseenter = function(){
+			clearInterval(timer);
+		}
+		$("#container").onmouseleave = function(){
+			timer = setInterval(move, 3000);
+		}
+
+		// 鼠标移入小圆点事件
+		for (let i = 0; i < len - 2; i++) {
+			circles[i].onmouseenter = function(){
+				nextIndex = i + 1;
+				move();
+			}
+		}
+
+		// 向上
+		$("#prev").onclick = function(){
+			if (isRunning)
+				return;
+			nextIndex = currentIndex - 1;
+			move();
+		}
+		// 向下
+		$("#next").onclick = function(){
+			if(isRunning)
+				return;
+			move();
+		};
+	</script>
+</body>
+</html>

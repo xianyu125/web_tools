@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style type="text/css">
+		* {margin: 0;padding: 0;}
+		#container {
+			width: 790px;
+			height: 340px;
+			position: relative;
+			margin:50px auto;
+		}
+		#imgs {
+			width: 790px;
+			height: 340px;
+			position: relative;
+			list-style: none;
+		}
+
+		#imgs li {
+			width: 790px;
+			height: 340px;
+			position: absolute;
+			top: 0;
+			left: 0;
+			display: none;
+		}
+
+		#pages {
+			width: 790px;
+			height: 30px;
+			position: absolute;
+			bottom: 0;
+			background: #000;
+		}
+
+		#pages i {
+			display: inline-block;
+			width:20px;
+			height: 20px;
+			margin:5px;
+			border-radius: 10px;
+			background: #fff;
+		}
+		#pages i.current {
+			background: #f00;
+		}
+
+		#prev, #next {
+			width: 45px;
+			height: 100px;
+			background: #000;
+			line-height: 100px;
+			text-align: center;
+			color:#fff;
+			position: absolute;
+			top:0;
+			bottom: 0;
+			margin: auto;
+		}
+		#next {
+			right:0;
+		}
+	</style>
+</head>
+<body>
+	<div id="container">
+		<ul id="imgs">
+			<li style="display: block;"><img src="images/1.jpg"></li>
+			<li><img src="images/2.jpg"></li>
+			<li><img src="images/3.jpg"></li>
+			<li><img src="images/4.jpg"></li>
+		</ul>
+		<div id="pages">
+			<i class="current"></i>
+			<i></i>
+			<i></i>
+			<i></i>
+		</div>
+		<div id="prev"><</div>
+		<div id="next">></div>
+	</div>
+
+	<script src="js/tools.js"></script>
+	<script>
+		var imgs = $("li", $("#imgs")), // 所有待轮播切换的图片盒子
+			len = imgs.length, // 轮播图片的张数
+			currentIndex = 0, // 当前正显示图片的索引
+			nextIndex = 1, // 即将显示的图片的索引
+			circles = $("i", $("#pages")), // 所有小圆点
+			timer = null; // 自动轮播计时器id
+
+		// 轮播切换图片的函数
+		function move(){
+			// 让当前正在显示的图片淡出
+			fadeOut(imgs[currentIndex], 400);
+			// 即将显示的图片淡入
+			fadeIn(imgs[nextIndex], 400);
+			// 小圆点样式切换
+			circles[currentIndex].className = "";
+			circles[nextIndex].className = "current";
+
+			// 修改索引
+			currentIndex = nextIndex;
+			nextIndex++;
+			if (nextIndex >= len)
+				nextIndex = 0;
+		}
+
+		// 自动轮播切换效果
+		timer = setInterval(move, 3000);
+
+		// 当鼠标指针移入轮播图范围，停止自动轮播
+		// 移出，重新启动自动轮播
+		$("#container").onmouseenter = function(){
+			clearInterval(timer);
+		}
+		$("#container").onmouseleave = function(){
+			timer = setInterval(move, 3000);
+		}
+
+		// 当鼠标指针移入小圆点时，向对应图片切换
+		for (let i = 0; i < len; i++) {
+			// 在当前遍历到的小圆点上缓存下标
+			circles[i].onmouseenter = function(){
+				// 获取当前小圆点在所有圆点中的索引
+				if (currentIndex === i)
+					return;
+				nextIndex = i;
+				move();
+			}
+		}
+		/*for (var i = 0; i < len; i++) {
+			// 在当前遍历到的小圆点上缓存下标
+			circles[i].index = i;
+			circles[i].onmouseenter = function(){
+				// 获取当前小圆点在所有圆点中的索引
+				var index = this.index;
+				if (currentIndex === index)
+					return;
+				nextIndex = index;
+				move();
+			}
+		}*/
+
+		/*// 事件委派处理小圆点移入事件
+		$("#pages").onmouseover = function(e){
+			e = e || event;
+			// 事件源元素
+			var src = e.target || e.srcElement;
+			// 判断事件源元素 
+			if (src.nodeName.toUpperCase() === "I") {
+				// 获取当前移入小圆点在所有小圆点中的索引
+				var index = Array.from(circles).indexOf(src);
+				if (currentIndex === index)
+					return;
+				// 向对应图片切换
+				nextIndex = index;
+				move();
+			}
+		}*/
+
+		// 向上
+		$("#prev").onclick = function(){
+			nextIndex = currentIndex - 1;
+			if (nextIndex < 0)
+				nextIndex = len - 1;
+			move();
+		}
+		// 向下
+		$("#next").onclick = move;
+	</script>
+</body>
+</html>
